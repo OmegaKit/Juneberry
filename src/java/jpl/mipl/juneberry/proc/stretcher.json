@@ -1,0 +1,60 @@
+[
+
+{
+    "name": "cassini_percent",
+    "description": "Percent stretcher for CASSINI",
+    "input": {
+        "ignoreValues": [], 
+        "ignoreRange": [0, 4095],
+        "range": [0.001, 0.01],
+        "extra": {
+            "minBelowBg": 15.0, 
+            "minLowerLimit": 30.0, 
+            "minDifference": 50.0, 
+            "minAbsolute": 0.0, 
+            "maxAbsolute": 4095.0
+        }
+    }
+},
+
+{
+    "name": "cassini_linear",
+    "description": "Linear stretcher for CASSINI",
+    "input": {
+        "ignoreValues": [], 
+        "ignoreRange": [0, 4095],
+        "range": [0.001, 0.01],
+        "extra": {
+            "minBelowBg": 15.0, 
+            "minLowerLimit": 30.0, 
+            "minDifference": 50.0, 
+            "minAbsolute": 0.0, 
+            "maxAbsolute": 4095.0
+        }
+    }
+},
+
+{
+    "name": "cassini_unity",
+    "description": "Unity stretcher for CASSINI",
+    "input": {
+        "ignoreValues": [], 
+        "ignoreRange": [0, 4095]
+    }
+},
+
+{
+    "name": "mer_percent",
+    "description": "Percent stretcher for MER",
+    "input": {
+    }
+},
+
+{
+    "name": "mer_extrema",
+    "description": "Extrema stretcher for MER",
+    "input": {
+    }
+},
+
+]

@@ -1,0 +1,57 @@
+div.w10n_nodes {
+}
+div.w10n_node {
+margin-top: 0.5em;
+}
+
+div.w10n_leaves {
+}
+div.w10n_leaf {
+margin-top: 0.5em;
+}
+
+.title {
+}
+.content {
+margin-left: 2em;
+}
+
+div.w10n_attributes {
+margin-top: 0.0em;
+}
+div.w10n_attributes .title {
+font-variant: small-caps;
+color: blue;
+}
+div.w10n_attribute {
+}
+div.w10n_attribute .name {
+font-style: italic;
+}
+div.w10n_attribute .value {
+margin-left: 1em;
+}
+span.vtoggler {
+color: blue;
+}
+
+span.j8a_meda {
+/* background-color: #ddd; */
+margin-left: 0.5em;
+}
+
+#j8aLinks {
+margin-bottom: 0.5em;
+}
+
+#j8aHint {
+margin-bottom: 0.5em;
+}
+
+#j8aFooter {
+margin-top: 1.0em;
+}
+#j8aFooter span {
+border-top: 1px solid black;
+font-style: italic;
+}

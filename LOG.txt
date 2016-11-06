@@ -1,0 +1,11 @@
+------
+v0.10.0r1
+
+20161104, xing
+(*) public release.
+
+------
+v0.10.0
+
+20151123, xing
+(*) initial open source release.

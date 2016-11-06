@@ -1,0 +1,3 @@
+20121203, xing
+
+Please check src/java/jpl/mipl/juneberry/Constant.java

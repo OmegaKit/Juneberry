@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+
+<!-- pay attention to orders -->
+
+<!-- form-based auth*n -->
+<!--
+<security-constraint>
+  <web-resource-collection>
+    <web-resource-name>juneberry</web-resource-name>
+    <url-pattern>/*</url-pattern>
+  </web-resource-collection>
+  <auth-constraint>
+    <role-name>demo</role-name>
+  </auth-constraint>
+</security-constraint>
+
+<login-config>
+  <auth-method>FORM</auth-method>
+  <realm-name>juneberry</realm-name>
+  <form-login-config>
+    <form-login-page>/login.html</form-login-page>
+    <form-error-page>/error.html</form-error-page>
+  </form-login-config>
+</login-config>
+-->
+
+<!-- filters -->
+
+<filter>
+  <filter-name>UrlRewriteFilter</filter-name>
+  <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+  <init-param>
+    <param-name>confReloadCheckInterval</param-name>
+    <param-value>60</param-value> <!-- -1, 0, or something like 60 -->
+  </init-param>
+  <init-param>
+    <param-name>logLevel</param-name>
+    <param-value>INFO</param-value>
+  </init-param>
+  <init-param>
+    <param-name>statusEnabledOnHosts</param-name>
+    <param-value>localhost, 192.168.188.*</param-value>
+  </init-param>
+</filter>
+
+<filter-mapping>
+  <filter-name>UrlRewriteFilter</filter-name>
+  <url-pattern>/*</url-pattern>
+  <dispatcher>REQUEST</dispatcher>
+  <dispatcher>FORWARD</dispatcher>
+</filter-mapping>
+
+<!-- env vars -->
+
+<!-- not used and kept for record.
+<env-entry>
+  <env-entry-name>FILTER_ORDER</env-entry-name>
+  <env-entry-value>deny_allow</env-entry-value>
+  <env-entry-type>java.lang.String</env-entry-type>
+</env-entry>
+
+<env-entry>
+  <env-entry-name>FILTER_PATTERNS_DENY</env-entry-name>
+  <env-entry-value>.*</env-entry-value>
+  <env-entry-type>java.lang.String</env-entry-type>
+</env-entry>
+
+<env-entry>
+  <env-entry-name>FILTER_PATTERNS_ALLOW</env-entry-name>
+  <env-entry-value>.*/sol\d{5}/.+/opgs/</env-entry-value>
+  <env-entry-type>java.lang.String</env-entry-type>
+</env-entry>
+-->
+
+<!-- servlets and mappings -->
+
+<servlet> <!-- w10n of file system directory -->
+  <servlet-name>JunamiWebifyServlet</servlet-name>
+  <servlet-class>one.junami.WebifyServlet</servlet-class>
+  <init-param>
+    <description>
+    URI path prefix.
+    Default is "".
+    </description>
+    <param-name>pathPrefix</param-name>
+    <param-value></param-value>
+  </init-param>
+  <init-param>
+    <description>
+    Root path of fs dir store.
+    Default is /var/www/html.
+    Must be in sync with other configuration.
+    </description>
+    <param-name>fs_dir_store_root</param-name>
+    <param-value>/home/t/work22/data</param-value>
+  </init-param>
+  <init-param>
+    <description>
+    Path of a file containing a list of regex patterns
+    that match webifiable entries. If a relative path,
+    it must be under the same directory as this file (web.xml).
+    Default is webifiable_pattern_list.txt
+    </description>
+    <param-name>webifiable_pattern_list_path</param-name>
+    <param-value>webifiable_pattern_list.txt</param-value>
+  </init-param>
+  <load-on-startup>0</load-on-startup>
+</servlet>
+
+<servlet-mapping>
+  <servlet-name>JunamiWebifyServlet</servlet-name>
+  <!-- md5sum("junami") = c87b915f293fa4f15eed9cc3a0a55e5c -->
+  <url-pattern>/c87b915f/*</url-pattern>
+</servlet-mapping>
+
+<servlet> <!-- w10n of imagery -->
+  <servlet-name>WebifyServlet</servlet-name>
+  <servlet-class>jpl.mipl.juneberry.WebifyServlet</servlet-class>
+  <init-param>
+    <description>
+    Define if w10n of fs dir is NOT by cgi-servlet.
+    Default is false</description>
+    <param-name>w10n_of_fs_dir_not_by_cgi_servlet</param-name>
+    <param-value>true</param-value>
+  </init-param>
+  <init-param>
+    <description>
+    URI path prefix.
+    Ignored if w10n_of_fs_dir_not_by_cgi_servlet is false.
+    Default is "".
+    </description>
+    <param-name>pathPrefix</param-name>
+    <param-value>/juneberry</param-value>
+  </init-param>
+  <init-param>
+    <description>
+    Root path of fs dir store.
+    Default is /var/www/html.
+    </description>
+    <param-name>fs_dir_store_root</param-name>
+    <param-value>/home/t/work22/data</param-value>
+  </init-param>
+  <init-param>
+    <description>
+    Comma-separated names for entries under fs_dir_store_root
+    that are to be soft-linked.
+    Ignored if w10n_of_fs_dir_not_by_cgi_servlet is true.
+    Default is "".
+    </description>
+    <param-name>entry_list</param-name>
+    <param-value></param-value>
+  </init-param>
+  <!-- must be loaded before cgi above -->
+  <load-on-startup>1</load-on-startup>
+</servlet>
+
+<servlet-mapping>
+  <servlet-name>WebifyServlet</servlet-name>
+  <url-pattern>/webify/*</url-pattern>
+</servlet-mapping>
+
+<servlet> <!-- logout -->
+  <servlet-name>LogoutServlet</servlet-name>
+  <servlet-class>jpl.mipl.juneberry.LogoutServlet</servlet-class>
+</servlet>
+
+<servlet-mapping>
+  <servlet-name>LogoutServlet</servlet-name>
+  <url-pattern>/logout</url-pattern>
+</servlet-mapping>
+
+</web-app>

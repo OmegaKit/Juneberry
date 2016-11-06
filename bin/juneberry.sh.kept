@@ -1,0 +1,87 @@
+#!/bin/bash
+
+set -e
+
+if [ $# = 0 ]; then
+  echo "Usage: juneberry COMMAND"
+  echo "where COMMAND is one of:"
+  echo "  StoreReaderClassFactory"
+  echo "  OutputWriterClassFactory"
+  echo "  CommandLineTool"
+  echo "  RemoteEhcache"
+  echo "  ImageIOTest"
+  echo "  ReaderLister"
+  echo "  Reader"
+  echo "      AutoMagic"
+  echo "      VicarIO"
+  echo "      Fits"
+  echo "  SimpleConvert"
+  exit 1
+fi
+
+# get arguments
+COMMAND=$1
+shift
+
+libDir=../juneberry-lib.dir-0.1.1
+
+CLASSPATH=\
+${libDir}\
+:${libDir}/log4j-1.2.13.jar\
+:${libDir}/commons-io-1.4.jar\
+:${libDir}/commons-lang-2.4.jar\
+:${libDir}/slf4j-jdk14-1.5.11.jar\
+:${libDir}/slf4j-api-1.5.11.jar\
+:${libDir}/ehcache-core-2.3.1.jar\
+:${libDir}/json_simple-1.1.jar\
+:${libDir}/treevotee-0.9.3.jar\
+:${libDir}/jai_imageio.jar\
+:${libDir}/jai_codec.jar\
+:${libDir}/jai_core.jar\
+:${libDir}/wiio-0.4.1.jar\
+:${libDir}/vicario-20110709p2xing.jar\
+:${libDir}/xalan.jar\
+:${libDir}/serializer.jar\
+:${libDir}/fits.jar\
+:${libDir}/fits_image.jar\
+:${libDir}/fits_util.jar\
+:${libDir}/ivoafits-0.3.jar\
+:./build/juneberry-0.1.1.jar
+#:../vicario.jar\
+#:${libDir}/vicario.jar\
+#:/home/xing/pds/vicario-xing/build/vicario-xing.jar\
+#:${libDir}/mlibwrapper_jai.jar\
+
+JAVA=$JAVA_HOME/bin/java
+JAVA_HEAP_MAX=-Xmx1000m 
+
+if [ "$COMMAND" = "StoreReaderClassFactory" ] ; then
+  CLASS=one.juneberry.store.read.ReaderClassFactory
+elif [ "$COMMAND" = "OutputWriterClassFactory" ] ; then
+  CLASS=one.juneberry.output.WriterClassFactory
+elif [ "$COMMAND" = "CommandLineTool" ] ; then
+  CLASS=one.juneberry.cli.CommandLineTool
+  #OPT_D="-Dcom.sun.media.jai.disableMediaLib=true"
+  #OPT_D=$OPT_D" -Dfoo.bar"
+elif [ "$COMMAND" = "RemoteEhcache" ] ; then
+  CLASS=one.juneberry.RemoteEhcache
+elif [ "$COMMAND" = "ImageIOTest" ] ; then
+  CLASS=one.juneberry.store.ImageIOTest
+elif [ "$COMMAND" = "ImageResizer" ] ; then
+  CLASS=one.juneberry.store.ImageResizer
+elif [ "$COMMAND" = "ReaderLister" ] ; then
+  CLASS=one.juneberry.cli.ReaderLister
+elif [ "$COMMAND" = "AutoMagic" ] ; then
+  CLASS=one.juneberry.store.AutoMagic
+elif [ "$COMMAND" = "VicarIO" ] ; then
+  CLASS=one.juneberry.store.read.VicarIO
+elif [ "$COMMAND" = "Fits" ] ; then
+  CLASS=one.juneberry.store.Fits
+elif [ "$COMMAND" = "SimpleConvert" ] ; then
+  CLASS=jpl.mipl.io.SimpleConvert
+else
+  CLASS=$COMMAND
+fi
+
+exec $JAVA $JAVA_HEAP_MAX $OPT_D -classpath "$CLASSPATH" $CLASS "$@"
+#exec $JAVA $JAVA_HEAP_MAX $NUTCH_OPTS -classpath "$CLASSPATH" $CLASS "$@"

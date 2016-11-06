@@ -1,0 +1,213 @@
+How to Install and Configure Juneberry
+
+20140130, xing
+20140107, 20130626, 20130612, 20121203, 20120610, 20120523, 20120509, 20111026
+
+Juneberry is a software package that implements the Webification (w10n) API
+for mission imagery data. It is typically run as a webapp in a servlet engine
+such as Tomcat. Besides java, python (2.6 and above) is required.
+
+0. Assumption
+
+Juneberry package is designed with maximum deployment flexibility.
+Our discussion here assumes NO admin privilege, so any non-root user
+should be able to follow and install Juneberry under his/her own account.
+For users with sudo or full admin privilege, some steps can be different.
+
+As an example, assume there is a user called "doe" on host "mybox"
+running Linux OS. The home directory is /home/doe.
+Furthermore, user "doe" has a data dir called
+/home/doe/data that contains three (3) collections of mission imagery files:
+/home/doe/data/set0
+/home/doe/data/set1
+/home/doe/data/set2
+
+Now, let us download all required packages/files:
+$ mkdir -p /home/doe/host/mybox/pkg
+$ cd /home/doe/host/mybox/pkg
+$ wget http://w10n.jpl.nasa.gov/juneberry/download/apache-tomcat-7.0.41.tar.gz
+$ wget http://w10n.jpl.nasa.gov/juneberry/download/juneberry-0.6.1p1.war
+$ wget http://w10n.jpl.nasa.gov/juneberry/download/crossdomain.xml
+
+1. Set Up Python Environment
+
+Since juneberry-0.6.1p1, no python setup is necessary, if python is 2.6 and above.
+
+2. Set Up Tomcat Servlet Engine
+
+A java JRE or JDK must exist on host mybox.
+
+Packages required:
+(*) apache-tomcat-7.0.41.tar.gz
+(*) juneberry-0.6.1p1.war
+
+Decide on a port that Tomcat should be listening to, e.g., 8080, then
+unpack apache-tomcat-7.0.41.tar.gz to its own location,
+
+$ mkdir -p /home/doe/host/mybox/8080
+$ cd /home/doe/host/mybox/8080
+$ tar zxvf /home/doe/host/mybox/pkg/apache-tomcat-7.0.41.tar.gz
+
+Next, deploy juneberry-0.6.1p1.war to ./apache-tomcat-7.0.41/webapps
+as ./juneberry, such as
+
+$ cd ./apache-tomcat-7.0.41/webapps
+$ mkdir ./juneberry
+$ cd ./juneberry
+$ jar xvf /home/doe/host/mybox/pkg/juneberry-0.6.1p1.war
+
+3. Configure Tomcat
+
+Tomcat config files such as ./conf/server.xml and ./conf/tomcat-users.xml
+must be modified. So is file web.xml inside webapps/juneberry.
+
+$ cd /home/doe/host/mybox/8080
+
+3.1 File ./apache-tomcat-7.0.41/conf/server.xml
+
+(a) Inside the <Host>...</Host> element for localhost, add
+
+<Context path="/juneberry" allowLinking="true" privileged="true"/>
+
+This is to allow (i) symblic link (ii) CGI execution
+
+(b) Inside the <Host>...</Host> element for localhost, enable (uncomment)
+
+<Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
+               prefix="localhost_access_log." suffix=".txt" pattern="combined" resolveHosts="false"/>
+
+This provides nice logging in the style of apache httpd.
+
+3.2 File ./apache-tomcat-7.0.41/conf/tomcat-users.xml
+
+Inside <tomcat-users>...</tomcat-users> element, add
+  <role rolename="demo"/>
+  <user username="demo" password="demo" roles="demo"/>
+
+This is to set up a demo user for testing purpose only.
+It uses Tomcat's MemoryRealm, a simple demonstration implementation
+of the Tomcat 6 Realm interface.
+
+Warning: in a production system, other types of realms must be used.
+
+3.3 Dir ./apache-tomcat-7.0.41/webapps/ROOT
+
+(a) Copy apache httpd icons to Tomcat's ROOT webapp
+
+$ cd ./apache-tomcat-7.0.41/webapps/ROOT
+$ cp -avi /var/www/icons .
+
+This is to provide icons for juneberry web GUI.
+
+(b) Download file crossdomain.xml and place it under ./ROOT
+
+$ cd /home/doe/host/mybox/8080
+$ cd ./apache-tomcat-7.0.41/webapps/ROOT
+$ cp -avi /home/doe/host/mybox/pkg/crossdomain.xml .
+
+This is to make Cooliris happy. It is a 3rd party image wall application
+used by Juneberry.
+
+3.4 File ./apache-tomcat-7.0.41/webapps/juneberry/WEB-INF/web.xml
+
+(a) Configure data directory
+
+$ cd /home/doe/host/mybox/8080
+
+File web.xml needs to be modified to have Juneberry webify files
+under a data directory.
+
+Assuming data directory /home/doe/data contains three (3) subdirs:
+/home/doe/data/set0
+/home/doe/data/set0
+/home/doe/data/set1
+
+inside web.xml, look for element 
+
+<servlet> <!-- w10n of imagery -->
+...
+</servlet>
+
+change the following
+
+  <init-param>
+    <description>
+    Root path of fs dir store.
+    Default is /var/www/html.
+    </description>
+    <param-name>fs_dir_store_root</param-name>
+    <param-value>/var/www/html</param-value>
+  </init-param>
+  <init-param>
+    <description>
+    Comma-separated names for entries under fs_dir_store_root
+    that are to be soft-linked.
+    Ignored if w10n_of_fs_dir_not_by_cgi_servlet is true.
+    Default is "".
+    </description>
+    <param-name>entry_list</param-name>
+    <param-value></param-value>
+  </init-param>
+
+to
+
+  <init-param>
+    <description>
+    Root path of fs dir store.
+    Default is /var/www/html.
+    </description>
+    <param-name>fs_dir_store_root</param-name>
+    <param-value>/home/doe/data</param-value>
+  </init-param>
+  <init-param>
+    <description>
+    Comma-separated names for entries under fs_dir_store_root
+    that are to be soft-linked.
+    Ignored if w10n_of_fs_dir_not_by_cgi_servlet is true.
+    Default is "".
+    </description>
+    <param-name>entry_list</param-name>
+    <param-value>set0, set1, set2</param-value>
+  </init-param>
+
+This will instruct Juneberry to add soft links to set0, set1 and set2
+under its context root, at its startup.
+
+(b) Configure cross-origin resource sharing (CORS)
+
+In the same web.xml above, add the following
+
+<filter>
+  <filter-name>CorsFilter</filter-name>
+  <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
+</filter>
+<filter-mapping>
+  <filter-name>CorsFilter</filter-name>
+  <url-pattern>/*</url-pattern>
+</filter-mapping>
+
+This enables CORS.
+
+3.5 File ./apache-tomcat-7.0.41/webapps/juneberry/WEB-INF/cgi/config.py
+
+This file defines what should be exposed.
+
+If you want to expose everything, simply uncomment the last line to have
+simpleFilter = None
+
+Otherwise, follow notes inside to have both
+list allowPatterns and denyPatterns set according to your need.
+
+4. Test
+
+Start Tomcat as
+/home/doe/host/mybox/8080/apache-tomcat-7.0.41/bin/catalina.sh start
+
+Point your browser to
+
+http://mybox:8080/juneberry
+
+and login as user demo with password demo.
+
+To stop Tomcat, do
+/home/doe/host/mybox/8080/apache-tomcat-7.0.41/bin/catalina.sh stop

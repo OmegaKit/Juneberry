@@ -1,0 +1,3 @@
+# 20151123, xing
+#
+jar_file = (commons-codec-1.4.jar, commons-exec-1.1.jar, edr-reader.jar, ehcache-core-2.4.2.jar, fits_image.jar, fits.jar, fits_util.jar, ivoafits-0.3.jar, jai_codec.jar, jai_core.jar, jai_imageio.jar, juneberry.jar, json_simple-1.1.jar, log4j-1.2.14.jar, slf4j-api-1.6.1.jar, slf4j-jdk14-1.6.1.jar, stretch.jar, urlrewritefilter-4.0.2.jar, vicario.jar, xercesImpl.jar)

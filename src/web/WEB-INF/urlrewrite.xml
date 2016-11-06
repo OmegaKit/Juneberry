@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 3.2//EN"
+        "http://tuckey.org/res/dtds/urlrewrite3.2.dtd">
+
+<urlrewrite>
+
+  <rule>
+    <name>w10n of common</name>
+    <note>
+      webify files in common formats
+    </note>
+    <!-- must match non-glob urls  -->
+    <from>^([^\*\?\[]+\.(gif|png|jpe?g(_small)?|tiff?))(/.*)$</from>
+    <to last="true">/webify/imageio!$1!$4</to>
+  </rule>
+
+  <rule>
+    <name>w10n of vicar</name>
+    <note>
+      webify files in formats supported by vicario
+    </note>
+    <!-- must match non-glob urls  -->
+    <from>^([^\*\?\[]+\.(img|lbl))(/.*)$</from>
+    <to last="true">/webify/imageio.vicario!$1!$3</to>
+  </rule>
+
+  <rule>
+    <name>w10n of fits</name>
+    <note>
+      webify files in fits format
+    </note>
+    <!-- must match non-glob urls  -->
+    <from>^([^\*\?\[]+\.fits?)(/.*)$</from>
+    <to last="true">/webify/imageio.fits!$1!$2</to>
+  </rule>
+
+  <rule>
+    <name>w10n of fs.glob</name>
+    <note>
+      use python cgi to glob list.
+    </note>
+    <!-- url that has '*' and/or '[' and/or '?' (encoded as %3f) -->
+    <!-- however, as of 20130129, urlrewrite filter has problem with '?', -->
+    <!-- so simply do not use it. Use "[]" to mimic '?'. -->
+    <!-- also, in following pattern, last '/' is critical. -->
+    <from>^(/.*(\*|\[|\%3f).*)/$</from>
+    <to last="true" encode="false">/bcf48233/globwebify.py$1</to>
+    <!-- md5("cgi-bin") = bcf482338b22144062a6da3e638c53ae -->
+    <!-- prefix "bcf48233" must be in sync with cgi servlet in web.xml -->
+  </rule>
+
+  <rule>
+    <name>w10n of fs dir</name>
+    <note>
+      webify file system directory
+    </note>
+    <!-- [^!]* must be used instead of .*, so that urls like -->
+    <!-- /1a0ce2df/x.hyrax.bes!$1!$3 won't be matched. -->
+    <!-- Furthermore, urls handled by this rule must end with '/' -->
+    <from>^()(/([^!]+/)?)$</from>
+    <!-- md5("junami") = c87b915f293fa4f15eed9cc3a0a55e5c -->
+    <!-- prefix "c87b915f" must be in sync with junami servlet in web.xml -->
+    <to last="true">/c87b915f/fs.dir!$1!$2</to>
+    <!-- <from>^/([^!]*)/$</from> -->
+    <!-- <to last="true">/c87b915f/index.py/$1</to> -->
+  </rule>
+
+  <rule>
+    <name>content of file in fs dir</name>
+    <note>
+      content of file in fs dir
+    </note>
+    <from>^()(/[^!]+[^\/])$</from>
+    <to last="true">/c87b915f/fs.dir!$1!$2[]</to>
+  </rule>
+
+</urlrewrite>

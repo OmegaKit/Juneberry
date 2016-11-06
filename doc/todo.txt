@@ -1,0 +1,6 @@
+20110701, xing
+
+(*) work with imageio tile
+(*) work with imageio ImageReadParam
+(*) work with SampleModel
+(*) work with ColorModel

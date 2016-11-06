@@ -1,0 +1,12 @@
+# this is a comment
+
+# for common image
+#^.+\.(gif|png|jpe?g(_small)?|tiff?)$
+# vicar and pds
+#^.+\.(img|lbl)$
+# for common image format
+^.+[^\*\?\[]+\.(gif|png|jpe?g(_small)?|tiff?)$
+# for vicar
+^.+[^\*\?\[]+\.(img|IMG)$
+# for fits
+^.+[^\*\?\[]+\.(fits?)$
