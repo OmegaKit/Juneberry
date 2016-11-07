@@ -1,0 +1,52 @@
+# Written by Lake Mossman, 24 Oct. 2016
+
+How to Use Treevotee Namespace Tools
+
+
+Both of these tools are located in the tool directory of the top level
+juneberry directory.
+
+
+replace_treevotee_namespace.sh
+
+        This script automatically replaces all occurrences of "the.treevotee"
+        with "jpl.mipl.treevotee" in all files under the given directory and
+        any subdirectory.
+
+        Usage:
+                ./replace_treevotee_namespace.sh <path to directory>
+
+        This will need to be ran on the juneberry src folder in order to make
+        files compatible with the converted treevotee source files, which is
+        done with the next tool.
+        If in the top-level juneberry directory, this can be done with:
+                ./tool/replace_treevotee_namespace.sh ./src/
+
+
+incorporate_treevotee_src.sh
+
+        This script takes a treevotee jar file and a path to a juneberry
+	directory as input and does the following:
+                (1) Extracts the source code from the jar file into a
+		temporary directory
+                (2) Automatically converts the source code into the new
+                namespace by replacing all occurrences of "the.treevotee" with
+                "jpl.mipl.treevotee" and changing the source code directory
+                structure from the.treevotee to jpl.mipl.treevotee
+                (3) Adds the following comment to the beginning of each source
+                file:
+                        /*
+                        This file is auto converted from open source package treevotee-x.x.x.jar
+                        only for name space change from the.treevotee to jpl.name.treevotee
+                        using tool incorporate_treevotee_src.sh
+                        by user-name on current-date
+                        */
+                (4) Copies the new treevotee source code folder into the
+		juneberry source code folder
+
+        Usage:
+                ./incorporate_treevotee_src.sh <path to treevotee jar> <path to juneberry directory>
+
+	This will need to be ran on a treevotee jar file in order to convert it
+	to the jpl mipl namespace and incorporate it into the juneberry source
+	code.
