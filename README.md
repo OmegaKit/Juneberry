@@ -2,7 +2,7 @@
 # Setting Up Juneberry Servlet
 
 ### Step 0: Copy The Required Files
-- Copy the entire 4Lake into your home directory
+- Copy the entire Junebery into your home directory
 - Find and copy the Apache tomcat tarball
 - Copy "crossdomain.xml"
 - Untar the Juneberry library
