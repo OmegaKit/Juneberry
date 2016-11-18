@@ -16,8 +16,8 @@
 - Download and unzip the juneberry-lib directory from https://github.com/OmegaKit/juneberry-lib
 
 ### Step 1: Build the .war File
-- Go into the Juneberry directory and enter the `ant war` command. This will automatically run the build.xml file. We need this war file to run on Apache tomcat.
-  - `$ cd /home/doe/Juneberry-master/`
+- Go into the juneberry directory and enter the `ant war` command. This will automatically run the build.xml file. We need this war file to run on Apache tomcat.
+  - `$ cd /home/doe/juneberry-master/`
   - `$ ant war`
 
 ### Step 2: Setting Up The Tomcat Servlet Engine
@@ -30,7 +30,7 @@
   - `$ mkdir ./juneberry`
 - Uncompress the war file into the newly created juneberry folder
   - `$ cd ./juneberry`
-  - `$ jar xvf /home/doe/Juneberry-master/juneberry-0.10.0r1.war`
+  - `$ jar xvf /home/doe/juneberry-master/juneberry-0.10.0r1.war`
 
 ### Step 3: Configure the Tomcat Server
 - Go to the top of our Tomcat server dir and open the server.xml file so that we may configure it.
