@@ -9,11 +9,11 @@
     - `/home/doe/data/set0`
     - `/home/doe/data/set1`
     - `/home/doe/data/set2`
-- Download and unzip this Juneberry directory
-  - `$ unzip Juneberry-master.zip`
+- Download and unzip this juneberry directory
+  - `$ unzip juneberry-master.zip`
 - Set up an Apache Tomcat servlet directory
 - Copy "crossdomain.xml"
-- Download and unzip the Juneberry-lib directory from https://github.com/OmegaKit/Juneberry-lib
+- Download and unzip the juneberry-lib directory from https://github.com/OmegaKit/juneberry-lib
 
 ### Step 1: Build the .war File
 - Go into the Juneberry directory and enter the `ant war` command. This will automatically run the build.xml file. We need this war file to run on Apache tomcat.
