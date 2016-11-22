@@ -73,7 +73,8 @@
 	...
 	</servlet>`
       - Change the following inside of this servlet element:
-		  `<init-param>
+		  ```xml
+		  <init-param>
 		    <description>
 		    Root path of fs dir store.
 		    Default is /var/www/html.
@@ -90,11 +91,13 @@
 		    </description>
 		    <param-name>entry_list</param-name>
 		    <param-value></param-value>
-		  </init-param>`
+		  </init-param>
+		  ```
 		  
 		  to
 		  
-		  `<init-param>
+		  ```xml
+		  <init-param>
 		    <description>
 		    Root path of fs dir store.
 		    Default is /var/www/html.
@@ -111,18 +114,22 @@
 		    </description>
 		    <param-name>entry_list</param-name>
 		    <param-value>set0, set1, set2</param-value>
-		  </init-param>`
+		  </init-param>
+		  ```
 
-    - Change 2: In the same file!
+    - Change 2: In the same file
       - Add the following:
-        `<filter>
-	  <filter-name>CorsFilter</filter-name>
-	  <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
-	</filter>
-	<filter-mapping>
-	  <filter-name>CorsFilter</filter-name>
-	  <url-pattern>/*</url-pattern>
-	</filter-mapping>`
+      
+		  ```xml
+		  <filter>
+		    <filter-name>CorsFilter</filter-name>
+		    <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
+		  </filter>
+		  <filter-mapping>
+		    <filter-name>CorsFilter</filter-name>
+		    <url-pattern>/*</url-pattern>
+		  </filter-mapping>
+		  ```
       - This enables CORS
       
 - Now change the port if needed (i.e. if you want something besides 8080)
