@@ -55,7 +55,7 @@
 ### Step 4: Copy Icons
 - Copy Apache http icons to Tomcat's ROOT webapp
   - `$ cd ./webapps/ROOT`
-  - `$ cp -avi /var/www/icons`
+  - `$ cp -avi /var/www/icons .`
 - This is to provide icons for juneberry web GUI
 
 ### Step 5: Setup Juneberry
