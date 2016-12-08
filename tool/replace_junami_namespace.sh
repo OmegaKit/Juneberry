@@ -13,8 +13,8 @@ then
 	exit
 fi
 
-OLD_NAMESPACE="the.treevotee"
-NEW_NAMESPACE="jpl.mipl.w10n.treevotee"
+OLD_NAMESPACE="one.junami"
+NEW_NAMESPACE="jpl.mipl.w10n.junami"
 DIR_PATH=$(readlink -f $1)
 
 echo "Replacing all \"$OLD_NAMESPACE\" references with \"$NEW_NAMESPACE\" in directory $DIR_PATH"

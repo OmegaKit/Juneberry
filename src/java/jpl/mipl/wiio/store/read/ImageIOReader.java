@@ -1,7 +1,7 @@
 package jpl.mipl.wiio.store.read;
 
 /*
- * Copyright (c) 2011 - 2013, California Institute of Technology ("Caltech").
+ * Copyright (c) 2011 - 2016, California Institute of Technology ("Caltech").
  * U.S. Government sponsorship acknowledged. All rights reserved.
  */
 
@@ -255,15 +255,15 @@ public abstract class ImageIOReader extends Reader {
 
         // ImageReader caches some data in files.
         // It is essential to dispose the reader AND the underlying
-        // ImageInputStream after use if it’s not needed anymore like so
+        // ImageInputStream after use if it's not needed anymore like so
         //
-        // If it isn’t closed and disposed,
+        // If it isn't closed and disposed,
         // the temporary cache files are either deleted not at all or
         // maybe at the next garbage collection.
         // I was able to bring down a VM by
-        // “java.io.FileNotFoundException: (Too many open files)” several times
-        // because i didn’t close a reader in a loop.
-        // Even the classloader wasn’t able to load any new classes
+        // "java.io.FileNotFoundException: (Too many open files)" several times
+        // because i didn't close a reader in a loop.
+        // Even the classloader wasn't able to load any new classes
         // after the ImageReader going mad on the file handle.
         Object inputObj = this.reader.getInput();
       try {
@@ -364,6 +364,32 @@ public abstract class ImageIOReader extends Reader {
             throw new ImageIOReaderException("Unknown w10n entity: "+entityName);
         }
 
+        // /imgnum/metadata as node
+        // names looks like  ["0", "metadata", ...]
+        if (names.length > 1 && names[1].equals(jpl.mipl.wiio.Constant.NODE_METADATA)) {
+            // get a list of names acceptable to MetadataExposer.get()
+            // foos looks like ["metadata", ...]
+            String[] foos = this.slice_array(names, 1, names.length-1);
+            foos[0] = "";
+            // now foos looks like ["", ...]
+            int imageIndex = i;
+            MetadataExposer metadataExposer = new MetadataExposer(this.reader, i);
+            try {
+                // meda == meta or data
+                Map meda = metadataExposer.get(foos, traverse, indexer);
+                // if data
+                if (indexer != null)
+                    return meda;
+                // otherwise meta, reset name if necessary
+                if (foos.length == 1)
+                    meda.put(Constant.NAME, jpl.mipl.wiio.Constant.NODE_METADATA);
+                return meda;
+            } catch (MetadataExposerException ree) {
+                throw new ImageIOReaderException(ree);
+            }
+        }
+
+        // /imgnum/raster as node
         // names looks like  ["0", "raster", ...]
         if (names.length > 1 && names[1].equals(jpl.mipl.wiio.Constant.NODE_RASTER)) {
             // get a list of names acceptable to Rasterexposer.get()
@@ -388,7 +414,41 @@ public abstract class ImageIOReader extends Reader {
                 throw new ImageIOReaderException(ree);
             }
         }
+        
+       
+        //===============================================
+        
+        // /imgnum/cmod as node
+        // names looks like  ["0", "cmod", ...]
+        if (names.length > 1 && names[1].equals(jpl.mipl.wiio.Constant.NODE_CMOD)) {
+            // get a list of names acceptable to CameraModelExposer.get()
+            // foos looks like ["cmod", ...]
+            String[] foos = this.slice_array(names, 1, names.length-1);
+            foos[0] = "";
+            // now foos looks like ["", ...]
+            int imageIndex = i;
+            CameraModelExposer cmodExposer = new CameraModelExposer(this.reader, i);
+            try {
+                // meda == meta or data
+                Map meda = cmodExposer.get(foos, traverse, indexer);
+                
+                // if data
+                if (indexer != null)
+                    return meda;
+                
+                // otherwise meta, reset name if necessary
+                if (foos.length == 1)
+                    meda.put(Constant.NAME, jpl.mipl.wiio.Constant.NODE_CMOD);
+                return meda;
+            } catch (CameraModelExposerException  cmee) {
+                throw new ImageIOReaderException(cmee);
+            }
+        }
+        
 
+        //==================================================
+        
+        
         // handle single band or combo bands with name like
         // "0", "1", "0-23-45"
         if (names.length > 1) {

@@ -1,7 +1,7 @@
 package jpl.mipl.wiio.store.read;
 
 /*
- * Copyright (c) 2011 - 2013, California Institute of Technology ("Caltech").
+ * Copyright (c) 2011 - 2016, California Institute of Technology ("Caltech").
  * U.S. Government sponsorship acknowledged. All rights reserved.
  */
 
@@ -155,6 +155,7 @@ public class ImageExposer {
         node.leaves.add(new Leaf(jpl.mipl.wiio.Constant.LEAF_IMAGE));
 
         // nodes
+        node.nodes.add(new Node(jpl.mipl.wiio.Constant.NODE_METADATA));
         node.nodes.add(new Node(jpl.mipl.wiio.Constant.NODE_RESIZED));
         node.nodes.add(new Node(jpl.mipl.wiio.Constant.NODE_RASTER));
         // 20131204, xing, "stretched" disabled
@@ -165,6 +166,12 @@ public class ImageExposer {
         //    node.nodes.add(new Node(""+i));
         //}
 
+        
+        //THIS SHOULD REALLY BE SOMEWHERE IN JUNEBERRY... (ntt, 071716)
+        node.nodes.add(new Node(jpl.mipl.wiio.Constant.NODE_CMOD));
+        
+        
+        
         return node.to_map();
     }
 

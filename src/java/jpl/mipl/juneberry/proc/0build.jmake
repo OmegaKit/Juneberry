@@ -1,0 +1,5 @@
+$V2JAVA/jpl/mipl/juneberry/proc/0build.jmake
+  packaged = 1
+  jar_file = juneberry.jar
+  extra_jar_files = (stretcher.json, stretcher_form.html)
+

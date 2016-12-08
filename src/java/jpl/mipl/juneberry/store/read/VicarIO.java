@@ -1,54 +1,55 @@
 package jpl.mipl.juneberry.store.read;
 
-/*
- * Copyright (c) 2011 - 2015, California Institute of Technology ("Caltech").
- * U.S. Government sponsorship acknowledged. All rights reserved.
- */
-
-import javax.media.jai.*;
-
+import java.awt.image.BufferedImage;
 import java.awt.image.DataBuffer;
 import java.awt.image.RenderedImage;
-import java.awt.image.BufferedImage;
-
-import javax.imageio.spi.IIORegistry;
-
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.stream.ImageInputStream;
-
-import javax.imageio.IIOImage;
-import javax.imageio.metadata.IIOMetadata;
-
-import javax.imageio.ImageReadParam;
-
-import java.util.Iterator;
-import java.util.Map;
-import java.util.HashMap;
-
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
-import jpl.mipl.wiio.store.read.ImageIOReader;
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReadParam;
+import javax.imageio.ImageReader;
+import javax.imageio.metadata.IIOMetadata;
+import javax.imageio.spi.IIORegistry;
+import javax.imageio.stream.ImageInputStream;
 
-import jpl.mipl.juneberry.proc.ProcessorClassFactory;
-import jpl.mipl.juneberry.util.Util;
+import javax.media.jai.JAI;
+import javax.media.jai.ParameterBlockJAI;
+import javax.media.jai.RenderedOp;
 
-import jpl.mipl.io.plugins.PDSImageReaderSpi;
-import jpl.mipl.io.plugins.VicarImageReaderSpi;
 import jpl.mipl.io.plugins.ISISImageReaderSpi;
 // 20110918, xing, not to have vicario handle fits for now
 //import jpl.mipl.io.plugins.FITSImageReaderSpi;
-
 import jpl.mipl.io.plugins.PDSImageReadParam;
-
+import jpl.mipl.io.plugins.PDSImageReaderSpi;
+import jpl.mipl.io.plugins.VicarImageReaderSpi;
 import jpl.mipl.juneberry.SimpleConvertBandSelect;
+import jpl.mipl.juneberry.util.Util;
+import jpl.mipl.wiio.proc.ProcessorClassFactory;
+import jpl.mipl.wiio.store.read.ImageIOReader;
+
+/*
+ * Copyright (c) 2011 - 2016, California Institute of Technology ("Caltech").
+ * U.S. Government sponsorship acknowledged. All rights reserved.
+ */
+
+
+//accurev is so fun!
 
 /**
  * @author Xing
+ * @author nttoole 2016.02.02
  */
 public class VicarIO extends ImageIOReader {
 
+    public static final String  PREFERRED_FORMAT           = "PDS_LABEL";
+    public static final boolean EXTRA_METADATA_IS_ERROR    = false;
+    public static final boolean MULTIPLE_METADATA_IS_ERROR = false;
+    
     static {
         IIORegistry.getDefaultInstance().registerServiceProvider(new PDSImageReaderSpi());
         IIORegistry.getDefaultInstance().registerServiceProvider(new VicarImageReaderSpi());
@@ -102,7 +103,19 @@ public class VicarIO extends ImageIOReader {
 
     // Is IIOImage lazy loading?
     private IIOImage get_iioimage(int i) throws IOException {
+        
+        //if (reader != null)
+        //{
+        //System.err.println("DEBUG::VicarIO::get_iioimage("+i+"): Reader class is "+reader.getClass().getName());
+        //}  
+
         ImageReadParam param = this.reader.getDefaultReadParam();
+        
+        //if (param != null)
+        //{
+        //System.err.println("DEBUG::VicarIO::get_iioimage("+i+"): Param class is "+param.getClass().getName());
+        //}     
+
         if (!(param instanceof PDSImageReadParam))
             return this.reader.readAll(i, param);
 
@@ -180,27 +193,52 @@ public class VicarIO extends ImageIOReader {
       } catch (IOException ioe) {
         throw new VicarIOException(ioe);
       }
+      
+        //if (meta != null)
+        //{
+        //System.err.println("DEBUG::VicarIO::get_metadata("+i+"): Metatype class is "+meta.getClass().getName());
+        //}
+      
         // there is one and only one standard or native formats for vicarIO
         String[] names = meta.getMetadataFormatNames();
-        if (names == null)
+        if (names == null || names.length == 0)
             throw new VicarIOException("Internal inconsistency: vicario does not produces any native meta.");
-        if (names.length != 1)
-            throw new VicarIOException("Internal inconsistency: vicario produces meta in more than one format, not supposed to happen.");
-        String formatName = names[0];
+
+        if (MULTIPLE_METADATA_IS_ERROR && names.length > 1)
+        {
+            String allNames = "";
+            for (String curName : names)
+                allNames = allNames + " " + curName;                    
+            throw new VicarIOException("Internal inconsistency: vicario produces meta in more than one format, not supposed to happen: "+allNames);
+        }
+        
+        final String formatName = names.length == 1 ? names[0] : 
+                                  select_single_format(names);
+        
         org.w3c.dom.Node tree = meta.getAsTree(formatName);
         if (tree == null)
             throw new VicarIOException("Internal inconsistency: vicario produces null tree for meta, not supposed to happen.");
 
         Object obj;
-      try {
-        obj = Util.node_to_object(tree);
-      } catch (IOException ioe) {
-        throw new VicarIOException(ioe);
-      }
-        // extra formats, which should be null for vicarIO
-        names = meta.getExtraMetadataFormatNames();
-        if (names != null) {
-            throw new VicarIOException ("Internal inconsistency: vicario produces extra meta, not supposed to happen.");
+        try {
+            obj = Util.node_to_object(tree);
+        } catch (IOException ioe) {
+            throw new VicarIOException(ioe);
+        }
+        
+        if (EXTRA_METADATA_IS_ERROR)
+        {
+            // extra formats, which should be null for vicarIO
+            names = meta.getExtraMetadataFormatNames();
+            if (names != null) 
+            {            
+                //String allNames = "";
+                //for (String curName : names)
+                //    allNames = allNames + " " + curName;
+                //
+                //throw new VicarIOException ("Internal inconsistency: vicario produces extra meta, not supposed to happen: "+allNames);            
+                throw new VicarIOException ("Internal inconsistency: vicario produces extra meta, not supposed to happen.");
+            }
         }
 
         return obj;
@@ -259,5 +297,45 @@ public class VicarIO extends ImageIOReader {
         VicarIO reader = new VicarIO(sid, path, config);
         Map obj = reader.get(identifier);
         System.out.print(org.json.simple.JSONValue.toJSONString(obj));
+    }
+    
+    protected String select_single_format(String[] formats)
+    {        
+        if (formats == null || formats.length == 0)
+            return null;
+        
+        String selected = null;
+        
+        //check for preferred format first
+        final String preferred = get_preferred_format();       
+        if (preferred != null)
+        {
+            for (String format : formats)
+                if (preferred.equals(format))
+                {                 
+                    selected = preferred;
+                }
+        }
+        
+        //choose quasi-arbitrarily (first non-null entry)
+        if (selected == null)
+        {
+            int selIndex = 0;
+            selected = formats[selIndex];
+            
+            //ensure selection is non-null
+            while (selected == null && selIndex < formats.length)
+            {
+                ++selIndex;
+                selected = formats[selIndex];
+            }
+        }
+        
+        return selected;
+    }
+      
+    protected String get_preferred_format()
+    {
+        return VicarIO.PREFERRED_FORMAT;
     }
 }

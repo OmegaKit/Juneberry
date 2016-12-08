@@ -1,6 +1,6 @@
 # Written by Lake Mossman, 24 Oct. 2016
 
-How to Use Treevotee Namespace Tools
+How to Use Namespace Tools
 
 
 Both of these tools are located in the tool directory of the top level
@@ -10,7 +10,7 @@ juneberry directory.
 replace_treevotee_namespace.sh
 
         This script automatically replaces all occurrences of "the.treevotee"
-        with "jpl.mipl.treevotee" in all files under the given directory and
+        with "jpl.mipl.w10n.treevotee" in all files under the given directory and
         any subdirectory.
 
         Usage:
@@ -18,9 +18,25 @@ replace_treevotee_namespace.sh
 
         This will need to be ran on the juneberry src folder in order to make
         files compatible with the converted treevotee source files, which is
-        done with the next tool.
-        If in the top-level juneberry directory, this can be done with:
+        done with the incorporate_treevotee_src.sh tool.
+        If in the top-level juneberry directory, this tool can be ran by doing:
                 ./tool/replace_treevotee_namespace.sh ./src/
+
+replace_junami_namespace.sh
+	
+	This script does the same as the above script, but for the junami
+	namespace rather than the treevotee namespace. It replaces all
+	occurrences of "one.junami" with "jpl.mipl.w10n.junami" in all files
+	under the given directory and ny subdirectories.
+	
+	Usage:
+                ./replace_junami_namespace.sh <path to directory>
+
+        This will need to be ran on the juneberry src folder in order to make
+        files compatible with the converted junami source files, which is
+        done with the incorporate_junami_src.sh tool.
+        If in the top-level juneberry directory, this tool can be ran by doing:
+                ./tool/replace_junami_namespace.sh ./src/
 
 
 incorporate_treevotee_src.sh
@@ -31,7 +47,7 @@ incorporate_treevotee_src.sh
 		temporary directory
                 (2) Automatically converts the source code into the new
                 namespace by replacing all occurrences of "the.treevotee" with
-                "jpl.mipl.treevotee" and changing the source code directory
+                "jpl.mipl.w10n.treevotee" and changing the source code directory
                 structure from the.treevotee to jpl.mipl.treevotee
                 (3) Adds the following comment to the beginning of each source
                 file:
@@ -50,3 +66,16 @@ incorporate_treevotee_src.sh
 	This will need to be ran on a treevotee jar file in order to convert it
 	to the jpl mipl namespace and incorporate it into the juneberry source
 	code.
+
+incorporate_junami_src.sh
+
+	This script does the same as the above script, but for the junami
+	source code, replacing "one.junami" with "jpl.mipl.w10n.junami".
+
+	 Usage:
+                ./incorporate_junami_src.sh <path to junami jar> <path to juneberry directory>
+
+        This will need to be ran on a junami jar file in order to convert it
+        to the jpl mipl namespace and incorporate it into the juneberry source
+        code.
+

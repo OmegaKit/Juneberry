@@ -1,7 +1,7 @@
 package jpl.mipl.juneberry;
 
 /*
- * Copyright (c) 2011 - 2015, California Institute of Technology ("Caltech").
+ * Copyright (c) 2011 - 2016, California Institute of Technology ("Caltech").
  * U.S. Government sponsorship acknowledged. All rights reserved.
  */
 
@@ -48,7 +48,7 @@ public class WebifyServlet extends the.treevotee.WebifyServlet {
 
     private String[] entryList = null;
 
-    public void init(ServletConfig config) throws ServletException {
+    public void init(javax.servlet.ServletConfig config) throws ServletException {
         super.init(config);
 
         Runtime rt = Runtime.getRuntime();

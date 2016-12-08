@@ -10,7 +10,7 @@ package jpl.mipl.juneberry;
  */
 public class Constant {
     public static final String APP_NAME = "juneberry";
-    public static final String APP_VERSION = "0.10.0r1";
+    public static final String APP_VERSION = "0.11.2"; //nttoole (2016.09.08)
 
     public static final String SIZE = "size";
 

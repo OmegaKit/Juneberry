@@ -1,2 +1,4 @@
 packaged = 1
 jar_file = juneberry.jar
+extra_jar_files = (Html.wiio.js)
+

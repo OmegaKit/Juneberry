@@ -10,13 +10,13 @@ set -e
 # Check if argument was given
 if [ $# -eq 0 ]
 then
-	echo "usage: $0 <path to treevotee jar> <path to juneberry directory>"
+	echo "usage: $0 <path to junami jar> <path to juneberry directory>"
 	exit
 fi
 
 # Set up variables and temporary directory for source modification
-OLD_NAMESPACE="the.treevotee"
-NEW_NAMESPACE="jpl.mipl.w10n.treevotee"
+OLD_NAMESPACE="one.junami"
+NEW_NAMESPACE="jpl.mipl.w10n.junami"
 BASE_PATH=$(readlink -f $0)
 BASE_DIR=$(dirname "$BASE_PATH")
 JAR_PATH=$(readlink -f $1)
@@ -32,11 +32,11 @@ jar -xf $JAR_PATH
 
 FILE_NAME=$(basename $JAR_PATH)
 
-COMMENT_MESSAGE="/*\nThis file is auto converted from open source package "$FILE_NAME"\nonly for name space change from "$OLD_NAMESPACE" to "$NEW_NAMESPACE"\nusing tool incorporate_treevotee_src.sh\nby "$USER" on "`date`"\n*/\n\n"
+COMMENT_MESSAGE="/*\nThis file is auto converted from open source package "$FILE_NAME"\nonly for name space change from "$OLD_NAMESPACE" to "$NEW_NAMESPACE"\nusing tool incorporate_junami_src.sh\nby "$USER" on "`date`"\n*/\n\n"
 
 # Update the tree structure
 mkdir -p ./jpl/mipl/
-mv ./the ./jpl/mipl/w10n
+mv ./one ./jpl/mipl/w10n
 find ./jpl/ -name "*.class" -type f -delete
 
 echo "Updating namespace from "$OLD_NAMESPACE" to "$NEW_NAMESPACE""
@@ -45,7 +45,7 @@ echo "Updating namespace from "$OLD_NAMESPACE" to "$NEW_NAMESPACE""
 find ./ -type f -exec sed -i -e 's/'$OLD_NAMESPACE'/'$NEW_NAMESPACE'/g' {} \;
 
 # Add the comment to the top of each source file
-find ./jpl/mipl/w10n/treevotee -type f -exec sed -i -e '1s;^;'"$COMMENT_MESSAGE"';' {} \;
+find ./jpl/mipl/w10n/junami -type f -exec sed -i -e '1s;^;'"$COMMENT_MESSAGE"';' {} \;
 
 # Copy new files into juneberry source
 echo "Copying source files to juneberry src"

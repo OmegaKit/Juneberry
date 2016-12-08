@@ -10,7 +10,7 @@ package jpl.mipl.wiio;
  */
 public class Constant {
     public static final String APP_NAME = "wiio";
-    public static final String APP_VERSION = "0.7.1";
+    public static final String APP_VERSION = "0.8.3"; //nttoole, (2016.09.08)
 
     public static final String NOTE = "note";
 
@@ -24,10 +24,13 @@ public class Constant {
 
     // entity names used in webified imageio model
     public static final String LEAF_IMAGE = "image";
+    public static final String NODE_METADATA = "metadata";
     public static final String NODE_RASTER = "raster";
     public static final String NODE_RESIZED = "resized";
     public static final String NODE_STRETCHED = "stretched";
-
+    
+    public static final String NODE_CMOD = "cmod";
+    
     // max size in bytes allowed for an array to be converted into json
     public static final String SYS_PROPERTY_OUTPUT_ARRAY2JSON_MAX = "wiio.output.array2json.max";
     public static final int OUTPUT_ARRAY2JSON_MAX = 8388608; // = 2^23
