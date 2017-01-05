@@ -20,7 +20,7 @@
   - `$ cd /home/doe/juneberry-master/`
   - `$ ant war`
 
-### Step 2: Setting Up The Tomcat Servlet Engine
+### Step 2: Setting up the Tomcat Servlet Engine
 - Decide on a port that Tomcat should be listening to, e.g., 8080, then unpack apache-tomcat-7.0.41.tar.gz to its own location:
   - `$ mkdir -p /home/doe/host/mybox/8080`
   - `$ cd /home/doe/host/mybox/8080`
@@ -30,7 +30,7 @@
   - `$ mkdir ./juneberry`
 - Uncompress the war file into the newly created juneberry folder
   - `$ cd ./juneberry`
-  - `$ jar xvf /home/doe/juneberry-master/juneberry-0.10.0r1.war`
+  - `$ jar xvf /home/doe/juneberry-master/build/juneberry-0.10.0r1.war`
 
 ### Step 3: Configure the Tomcat Server
 - Go to the top of our Tomcat server dir and open the server.xml file so that we may configure it.
@@ -60,7 +60,6 @@
 
 ### Step 5: Setup Juneberry
 - Copy crossdomain.xml from home folder into our apache-server-folders webapps/ROOT
-  - `$ cd ./webapps/ROOT`
   - `$ cp -avi /home/doe/host/mybox/pkg/crossdomain.xml .`
 - This is to make Cooliris happy. It is a 3rd party image wall application used by Juneberry.
 - NOW WE POINT JUNEBERRY TO THE DATA!
@@ -68,7 +67,11 @@
     - `$ cd /home/doe/host/mybox/8080/apache-tomcat-7.0.41/`
     - `$ vim ./webapps/juneberry/WEB-INF/web.xml`
     - Change 1:
-      - Look for the element
+      - Look for both the elements
+        `<servlet> <!-- w10n of file system directory -->
+	...
+	</servlet>`
+	and
         `<servlet> <!-- w10n of imagery -->
 	...
 	</servlet>`
