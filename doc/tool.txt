@@ -1,10 +1,43 @@
 # Written by Lake Mossman, 24 Oct. 2016
+# Updated 6 Jan. 2017
 
-How to Use Namespace Tools
+How to Use Juneberry Tools
 
 
-Both of these tools are located in the tool directory of the top level
+All of these tools are located in the tool subdirectory of the top level
 juneberry directory.
+
+
+setup_juneberry_server.sh
+
+	This script automatically configures an apache tomcat server to run
+	juneberry within the server.
+
+	Usage:
+		./setup_juneberry_server.sh [-c] <path to juneberry directory> <path to apache servlet directory> <path to data directory> <desired port>
+	
+	The compile flag (-c) is used to tell the script to recompile the
+	juneberry source code. If this flag is not there, the script will use
+	the current juneberry war file that already exists.
+
+	The <path to juneberry directory> argument is used to give the path
+	to the juneberry directory that is saved on the user's local machine.
+	This directory should contain the war file in a "build" subdirectory,
+	or have the necessary source code to compile this war file.
+
+	The <path to apache servlet directory> argument is used to give the
+	path to the apache tomcat servlet directory that is saved on the
+	user's local machine. The script will add a juneberry directory to
+	this server's webapps folder and add the juneberry source code there.
+
+	The <path to data directory> argument is used to give the path to the
+	local directory holding the data that the user would like to webify.
+
+	The <desired port> argument is used to state which port the server
+	should run on.
+
+
+---------------------------------------
 
 
 replace_treevotee_namespace.sh
@@ -22,6 +55,8 @@ replace_treevotee_namespace.sh
         If in the top-level juneberry directory, this tool can be ran by doing:
                 ./tool/replace_treevotee_namespace.sh ./src/
 
+----
+
 replace_junami_namespace.sh
 	
 	This script does the same as the above script, but for the junami
@@ -38,6 +73,7 @@ replace_junami_namespace.sh
         If in the top-level juneberry directory, this tool can be ran by doing:
                 ./tool/replace_junami_namespace.sh ./src/
 
+--------
 
 incorporate_treevotee_src.sh
 
@@ -66,6 +102,8 @@ incorporate_treevotee_src.sh
 	This will need to be ran on a treevotee jar file in order to convert it
 	to the jpl mipl namespace and incorporate it into the juneberry source
 	code.
+
+----
 
 incorporate_junami_src.sh
 
