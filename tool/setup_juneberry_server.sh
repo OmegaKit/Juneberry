@@ -43,11 +43,10 @@ PORT=$4
 
 
 # Step 1: Build the .war File
-echo "Building war file in \"$JUNEBERRY_PATH\""
-
 cd $JUNEBERRY_PATH
 if [ $COMPILE_FLAG = true ]
 then
+	echo "Building war file in \"$JUNEBERRY_PATH\""
 	ant clean
 	ant war
 fi
@@ -59,7 +58,6 @@ then
 	echo "Error: juneberry war file does not exist"
 	exit 1
 fi
-echo "war path: \"$WAR_PATH\""
 
 
 # Step 2: Setting up the Tomcat Servlet Engine
